@@ -17,22 +17,23 @@ ingredients = {
     "fruity": ["slice of orange", "dash of cassis", "cherry on top"],
 }
 cocktailnames= ["SakeBomb","Zombie","Tom and Jerry","Black and Tan","Black Velvet",]
-#Change in GIT
+
 #function to make the drink
 def contents(preferences):
 
     for key,value in preferences.items():
-        if value:
+        if value == True:
             drink.append(random.choice(ingredients[key]))
-    print("YO! Your drink is {}.".format(random.choice(cocktailnames))+" " + "It contains")
-    for item in drink:
-        print(item)
+   
+    if len(drink)>0:
+        print("YO! Your drink is {}.".format(random.choice(cocktailnames))+" " + "It contains")
+        for item in drink:
+            print(item)
+    else:
+        print("Umm, you didnt choose from any of the choices")
 
 #function to ask customer preference
 def ask(questions):
-    print("Hi there")
-    print("How would you like your drink to be? Enter y or yes for selection")
-    
     for key,value in questions.items():
         print(value)
         my_input = raw_input()
@@ -41,8 +42,17 @@ def ask(questions):
         else:
            preferences[key]= False
     contents(preferences)      
-   # return preferences
+
 
 if __name__=="__main__":
-        ask(questions)
-       
+        print("Welcome to our bar")
+        print("How would you like your drink to be? Enter y or yes for selection")
+        while True:
+            ask(questions)
+            drink[:]=[]
+            preferences.clear()
+            customer_choice= raw_input("Would you like another drink? \n Hit TIP if you are tipsy\n")
+            if customer_choice=="TIP":
+                print("Thanks for coming. Hope you enjoyed your time")
+                break;
+     
