@@ -1,3 +1,5 @@
+import random
+
 questions = {
     "strong": "Do ye like yer drinks strong?",
     "salty": "Do ye like it with a salty tang?",
@@ -13,11 +15,13 @@ ingredients = {
     "sweet": ["sugar cube", "spoonful of honey", "spash of cola"],
     "fruity": ["slice of orange", "dash of cassis", "cherry on top"],
 }
-import random
+
+drink=[]
+preferences={}
 
 
 def contents(preferences):
-    drink=[]
+
     for key,value in preferences.items():
         if value:
             drink.append(random.choice(ingredients[key]))
@@ -28,7 +32,7 @@ def contents(preferences):
 def ask(questions):
     print("Hi there")
     print("How would you like your drink to be? Enter y or yes for selection")
-    preferences={}
+    
     for key,value in questions.items():
         print(value)
         my_input = input()
