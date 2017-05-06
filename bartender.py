@@ -1,5 +1,7 @@
 import random
-
+#global variables
+drink=[]
+preferences={}
 questions = {
     "strong": "Do ye like yer drinks strong?",
     "salty": "Do ye like it with a salty tang?",
@@ -7,7 +9,6 @@ questions = {
     "sweet": "Would ye like a bit of sweetness with yer poison?",
     "fruity": "Are ye one for a fruity finish?",
 }
-
 ingredients = {
     "strong": ["glug of rum", "slug of whisky", "splash of gin"],
     "salty": ["olive on a stick", "salt-dusted rim", "rasher of bacon"],
@@ -16,10 +17,8 @@ ingredients = {
     "fruity": ["slice of orange", "dash of cassis", "cherry on top"],
 }
 
-drink=[]
-preferences={}
 
-
+#function to make the drink
 def contents(preferences):
 
     for key,value in preferences.items():
@@ -28,7 +27,7 @@ def contents(preferences):
     print("Selected Drink's ingredients")
     print(drink)
 
-
+#function to ask customer preference
 def ask(questions):
     print("Hi there")
     print("How would you like your drink to be? Enter y or yes for selection")
@@ -45,5 +44,4 @@ def ask(questions):
 
 if __name__=="__main__":
         ask(questions)
-        #print("Selected drink type")
-        #print(preferences.keys())
+       
