@@ -16,7 +16,7 @@ ingredients = {
     "sweet": ["sugar cube", "spoonful of honey", "spash of cola"],
     "fruity": ["slice of orange", "dash of cassis", "cherry on top"],
 }
-
+cocktailnames= ["SakeBomb","Zombie","Tom and Jerry","Black and Tan","Black Velvet",]
 #Change in GIT
 #function to make the drink
 def contents(preferences):
@@ -24,8 +24,9 @@ def contents(preferences):
     for key,value in preferences.items():
         if value:
             drink.append(random.choice(ingredients[key]))
-    print("Selected Drink's ingredients")
-    print(drink)
+    print("YO! Your drink is {}.".format(random.choice(cocktailnames))+" " + "It contains")
+    for item in drink:
+        print(item)
 
 #function to ask customer preference
 def ask(questions):
@@ -34,7 +35,7 @@ def ask(questions):
     
     for key,value in questions.items():
         print(value)
-        my_input = input()
+        my_input = raw_input()
         if my_input=="y" or my_input=="yes":
             preferences[key]=True
         else:
