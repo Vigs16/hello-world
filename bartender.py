@@ -1,6 +1,6 @@
 import random
 #global variables
-customerhistory={}
+custorder={}
 questions = {
     "strong": "Do ye like yer drinks strong?",
     "salty": "Do ye like it with a salty tang?",
@@ -18,64 +18,66 @@ ingredients = {
 cocktailnames= ["SakeBomb","Zombie","Tom and Jerry","Black and Tan","Black Velvet",]
 
 #function to make the drink
-def contents(preferences,cname):
+def makedrink(preferences,cname):
     drink=[]
-    for key,value in preferences.items():
-        if value == True:
+    for key in preferences:
+        if preferences[key] == True:
             drink.append(random.choice(ingredients[key]))
    
     if len(drink)>0:
         drinkname=random.choice(cocktailnames)
-        customerhistory[cname]=drink
-        print("YO! Your drink is {}.".format(drinkname)+" " + "It contains")
-        for item in drink:
-            print(item)
         drink.append(drinkname+" "+"Containing")
+        custorder[cname]=drink
+        return custorder
     else:
         print("Umm, you didnt choose from any of the choices")
 
 #function to ask customer preference
-def ask(questions):
+def TakeOrder(questions):
     preferences={}
     for key,value in questions.items():
         print(value)
-        my_input = raw_input()
-        if my_input=="y" or my_input=="yes":
+        my_input = input()
+        if my_input.lower() in ['yes','y','yeah','yup']:
             preferences[key]=True
         else:
            preferences[key]= False
-    contents(preferences,cname)      
+    ServeDrink(cname,makedrink(preferences,cname))      
 
 #function to Welcome Customer
 def Welcome(cname):
-   
     print("How would you like your drink to be? Enter y or yes for selection")
-    ask(questions)
-    Reorder(cname)
+    TakeOrder(questions)
+    ReOrder(cname)
 
 #function to provide another drink
-def Reorder(cname):
-    customer_choice= raw_input("Would you like another drink? \n Hit TIP if you want to leave\n")
-    if customer_choice=="TIP":
+def ReOrder(cname):
+    customer_choice= input("Would you like another drink? \n Hit TIP if you want to leave\n")
+    if customer_choice.lower() in ['tip','n','no']:
         print("Thanks for coming {}. Hope you enjoyed your time".format(cname))
-        del(customerhistory[cname])
+        del(custorder[cname])
     return
+
+#function to serve drink
+def ServeDrink(cname,custorder):
+    for item in reversed(custorder[cname]):
+       print (item)
     
 if __name__=="__main__":
         while True:
-            cname=raw_input("Show us your ID\n")
-            if cname in customerhistory:
-                c_choice1=raw_input("Would you like same drink?\n Hit Y, else Hit N\n")
-                if c_choice1=="Y":
+            cname=input("Show us your ID\n")
+            if cname in custorder:
+                c_choice1=input("Would you like same drink?\nHit Y, else Hit N\n")
+                if c_choice1.lower() in ['yes','y','yeah','yup']:
                     print("Here is your next round of")
-                    for item in reversed(customerhistory[cname]):
-                        print item
-                        
-                    Reorder(cname)
+                    ServeDrink(cname,custorder)
+                    ReOrder(cname)
                 else:
                     Welcome(cname)
             else:
-                print("Welcome to our bar")
-                Welcome(cname)
-               
+                if len(cname)> 0:
+                    print("Welcome to our bar")
+                    Welcome(cname)
+                else:
+                    break
      
