@@ -1,26 +1,13 @@
-class Bassist(object):
-    def __init__(self):
-        self.sounds = ["Twang", "Thrumb", "Bling"]
-
-    def solo(self, length):
-        for i in range(length):
-            print(self.sounds[i % len(self.sounds)])
-        print()
-
-class Guitarist(object):
-    def __init__(self):
-        self.sounds = ["Boink", "Bow", "Boom"]
-
-
-    def solo(self, length):
-        for i in range(length):
-            print(self.sounds[i % len(self.sounds)])
-        print()
-
-    def tune(self):
-        print("Be with you in a moment")
-        print("Twoning, sproing, splang")
+class Employee(object):
+    empcount=0;
+    
+    def __init__(self,name,sal):
+        self.name=name
+        self.sal=sal
+        Employee.empcount+=1
+        self.number=Employee.empcount
+        
+    def Introduce(self):
+        print("I am {} and my salary is {}. I am the {} employee".format(self.name,self.sal,self.number))
         
 
-david = Musician(["Twang", "Thrumb", "Bling"])
-david.solo(6)

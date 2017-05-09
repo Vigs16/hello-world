@@ -52,7 +52,7 @@ def Welcome(cname):
 
 #function to provide another drink
 def ReOrder(cname):
-    customer_choice= input("Would you like another drink? \n Hit TIP if you want to leave\n")
+    customer_choice= input("Would you like another drink?\nHit TIP if you want to leave\n")
     if customer_choice.lower() in ['tip','n','no']:
         print("Thanks for coming {}. Hope you enjoyed your time".format(cname))
         del(custorder[cname])
