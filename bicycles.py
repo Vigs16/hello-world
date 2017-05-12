@@ -6,18 +6,17 @@ class Bicycle(object):
         self.name=name
         self.weight=BicycleParts.BicycleWeight
         self.cost=BicycleParts.BicycleCost
-        self.displayBicycle()
         
-    def displayBicycle(self):
+        
+    def __str__(self):
         print("Name: {} Weight: {} Price: {}".format(self.name,self.weight,self.cost))
         
 class Customer(object):
     def __init__(self,name,fund):
         self.name=name
         self.fund=fund
-        self.displayCustomer()
         
-    def displayCustomer(self):
+    def __str__(self):
         print("I am {} and I have {} funds".format(self.name,self.fund))
 
         
@@ -33,7 +32,7 @@ class BikeShop(object):
             self.inventory[Bicycle.name]=0.2*Bicycle.cost+Bicycle.cost
         
         
-    def displayBikeShop(self):
+    def __str__(self):
         print("Name of the BikeShop: {}".format(self.name))
         print("Inventory List")
         for cycle,sp in self.inventory.items():
@@ -78,10 +77,22 @@ class Wheel(Parts):
         
 
 class Frame(Parts):
-    def __init__(self,weight,cost,name):
+    def __init__(self,weight,cost,type):
         super(Frame,self).__init__(weight,cost)
-        self.name=name
+        self.type=type 
         
+    @property   
+    def type(self):
+        return self.__type
+    @type.setter
+    def type(self,type):
+        if type.lower() in ["aluminium","carbon","steel"]:
+            self.__type=type
+        else:
+           raise ValueError("Invalid Frame type")
+            
+    def __str__(self):
+        print("Frame details {} {} {}".format(self.weight,self.cost,self.type))
    
 class BicycleParts(object):
     BicycleCost=0
@@ -96,14 +107,14 @@ class BicycleParts(object):
        
         
         
-    def display(self):
+    def __str__(self):
         print("Total Cost {} and Total Weight {}".format(BicycleParts.BicycleCost,BicycleParts.BicycleWeight))
         
 F1 = Frame(10,30,"Aluminium")
 WL=[Wheel(10,10.2,"Aluminium"),Wheel(10,10.2,"Aluminium")]
 
 BP1= BicycleParts(WL,F1)
-BP1.display()
+BP1.__str__()
 
 
 B1= Bicycle("Atlas",BP1)
