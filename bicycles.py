@@ -2,10 +2,10 @@ from collections import OrderedDict
 from operator import itemgetter
 
 class Bicycle(object):
-    def __init__(self,name,weight,cost):
+    def __init__(self,name,BicycleParts):
         self.name=name
-        self.weight=weight
-        self.cost=cost
+        self.weight=BicycleParts.BicycleWeight
+        self.cost=BicycleParts.BicycleCost
         self.displayBicycle()
         
     def displayBicycle(self):
@@ -19,13 +19,7 @@ class Customer(object):
         
     def displayCustomer(self):
         print("I am {} and I have {} funds".format(self.name,self.fund))
-        
-    #def checkBicycle(self,BikeShop):
-     #   print("The affordable bikes are")
-      #  for key in BikeShop.inventory:
-       #     if self.fund >= BikeShop.inventory.get(key,0):
-        #        print key
-            
+
         
 class BikeShop(object):
   
@@ -45,10 +39,6 @@ class BikeShop(object):
         for cycle,sp in self.inventory.items():
             print(cycle,sp)
             
-    def sellBicycles(self,Bicycle):
-        BikeShop.NetProfit=BikeShop.NetProfit+self.inventory[Bicycle.name]
-        self.inventory.pop(Bicycle.name)
-        pass
   
     def filterBicycles(self,Customers):
         print("Affordable Bicycles")
@@ -76,19 +66,46 @@ class BikeShop(object):
                         del self.inventory[key]
                     break    
     
+class Parts(object):
+    def __init__(self,weight,cost):
+        self.weight=weight
+        self.cost=cost
+        
+class Wheel(Parts):
+    def __init__(self,weight,cost,name,):
+        super(Wheel,self).__init__(weight,cost)
+        self.name=name
+        
 
-Customers=[Customer("Vigs",1000),Customer("Alex",200),Customer("James",500)]
+class Frame(Parts):
+    def __init__(self,weight,cost,name):
+        super(Frame,self).__init__(weight,cost)
+        self.name=name
+        
+   
+class BicycleParts(object):
+    BicycleCost=0
+    BicycleWeight=0
+    
+    def __init__(self,wheels,frame):
+        BicycleParts.BicycleCost+=frame.cost
+        BicycleParts.BicycleWeight+=frame.weight
+        for Wheel in wheels:
+            BicycleParts.BicycleCost+=Wheel.cost
+            BicycleParts.BicycleWeight+=Wheel.weight
+       
+        
+        
+    def display(self):
+        print("Total Cost {} and Total Weight {}".format(BicycleParts.BicycleCost,BicycleParts.BicycleWeight))
+        
+F1 = Frame(10,30,"Aluminium")
+WL=[Wheel(10,10.2,"Aluminium"),Wheel(10,10.2,"Aluminium")]
 
-Bikes=[Bicycle("Atlas","50lbs",1050),Bicycle("Neptune","50lbs",110), Bicycle("Pluto","50lbs",150),Bicycle("Mars","50lbs",400),Bicycle("Earth","40lbs",1510),Bicycle("Venus","60lbs",500)]
+BP1= BicycleParts(WL,F1)
+BP1.display()
 
-BS1= BikeShop("Mountaineers",Bikes)
 
-print("Initial Inventory")
-BS1.displayBikeShop()
-print("-----------------")
-BS1.filterBicycles(Customers)
-BS1.SellBicycles(Customers)
-print("-----------------")
-print("After Sale, Inventory")
-BS1.displayBikeShop()
-print("Profit after selling three bikes {}".format(BS1.NetProfit))
+B1= Bicycle("Atlas",BP1)
+
+
