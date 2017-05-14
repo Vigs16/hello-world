@@ -1,21 +1,15 @@
 from collections import OrderedDict
 from operator import itemgetter
 
-class Parts(object):
-    def __init__(self,weight,cost):
-        self._weight=weight
-        self._cost=cost
-
-
-class Bicycle(Parts):
+class Bicycle(object):
     def __init__(self,name,BicycleParts):
-        super().__init__(BicycleParts.BicycleWeight,BicycleParts.BicycleCost)
         self.name=name
-        self.__str__()
+        self.weight=BicycleParts.BicycleWeight
+        self.cost=BicycleParts.BicycleCost
         
         
     def __str__(self):
-        print("Name: {} Weight: {}lbs Price: ${}".format(self.name,self._weight,self._cost))
+        print("Name: {} Weight: {} Price: {}".format(self.name,self.weight,self.cost))
         
 class Customer(object):
     def __init__(self,name,fund):
@@ -25,6 +19,7 @@ class Customer(object):
     def __str__(self):
         print("I am {} and I have {} funds".format(self.name,self.fund))
 
+        
 class BikeShop(object):
   
     NetProfit=0;
@@ -70,53 +65,77 @@ class BikeShop(object):
                         del self.inventory[key]
                     break    
     
-
+class Parts(object):
+    def __init__(self,weight,cost):
+        self.weight=weight
+        self.cost=cost
         
 class Wheel(Parts):
-    def __init__(self,wheeltype):
-        wheeltypes={'bmx':(2,20),'road':(1,20),'track':(2.5,20)}
-        if(wheeltype.lower() in wheeltypes):
-            super().__init__(wheeltypes[wheeltype.lower()][0],wheeltypes[wheeltype.lower()][1])    
-        else:
-            raise ValueError("Invalid Wheel type")
+    def __init__(self,modelname,weight=0,cost=0):
+         self.__modelname=modelname
+         self.cost=cost
+         self.weight=cost
+         
+    @property
+    def modelname(self):
+        return self.__modelname
+        
+    @modelname.setter
+    def modelname(self,modelname):
+        wheeltype={'bmx':(2,20),'road':(1,20),'track':(2.5,20)}
+        if(self.__modelname in wheeltype):
+            super(Wheel,self).__init__(wheeltype[self.modelname][0],wheeltype[self.modelname][1])
+        
+            
             
     def __str__(self):
-        print("Wheel details {} {}".format(self._cost,self._weight))
+        print("Wheel details {} {}".format(self.cost,self.weight))
 
 class Frame(Parts):
-    def __init__(self,Frametype):
-        Frametypes={'aluminium':(10,120),'carbon':(15,200),'steel':(112.5,250)}
-        if(Frametype.lower() in Frametypes):
-            super().__init__(Frametypes[Frametype.lower()][0],Frametypes[Frametype.lower()][1])    
+    def __init__(self,weight,cost,type):
+        super(Frame,self).__init__(weight,cost)
+        self.type=type 
+        
+    @property   
+    def type(self):
+        return self.__type
+    @type.setter
+    def type(self,type):
+        if type.lower() in ["aluminium","carbon","steel"]:
+            self.__type=type
         else:
-            raise ValueError("Invalid Frame type")
-     
+           raise ValueError("Invalid Frame type")
+            
     def __str__(self):
-        print("Frame details {} {}".format(self._weight,self._cost))
+        print("Frame details {} {} {}".format(self.weight,self.cost,self.type))
    
-class BicycleParts(Wheel,Frame):
+class BicycleParts(object):
     BicycleCost=0
     BicycleWeight=0
     
-    def __init__(self,wheeltype,count,frame):
-        BicycleParts.BicycleCost+=frame._cost
-        BicycleParts.BicycleWeight+=frame._weight
-        for i in range(0,count):
-            W1=Wheel(wheeltype)
-            BicycleParts.BicycleCost+=W1._cost
-            BicycleParts.BicycleWeight+=W1._weight
+    def __init__(self,wheels,frame):
+        BicycleParts.BicycleCost+=frame.cost
+        BicycleParts.BicycleWeight+=frame.weight
+        for Wheel in wheels:
+            BicycleParts.BicycleCost+=Wheel.cost
+            BicycleParts.BicycleWeight+=Wheel.weight
        
-    def __str__(self):
-        print("Total Cost $ {}  and Total Weight {} lbs".format(BicycleParts.BicycleCost,BicycleParts.BicycleWeight))
         
-
-WL=[Wheel("road"),Wheel("road")]
+        
+    def __str__(self):
+        print("Total Cost {} and Total Weight {}".format(BicycleParts.BicycleCost,BicycleParts.BicycleWeight))
+        
+F1 = Frame(10,30,"Aluminium")
+F1.type="CArbon"
+F1.__str__()
+#WL=[Wheel(10,10.2,"Aluminium"),Wheel(10,10.2,"Aluminium")]
 W1=Wheel("road")
-F1=Frame("Carbon")
-BP1= BicycleParts("road",2,F1)
-BP1.__str__()
+W1.modelname="road"
+W1.__str__()
+#BP1= BicycleParts(WL,F1)
+#BP1.__str__()
 
 
-B1= Bicycle("Atlas",BP1)
+#B1= Bicycle("Atlas",BP1)
 
 
