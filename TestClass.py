@@ -1,16 +1,49 @@
 from collections import OrderedDict
 from operator import itemgetter
+from enum import Enum
 
-class Bicycle(object):
-    def __init__(self,name,BicycleParts):
-        self.name=name
-        self.weight=BicycleParts.BicycleWeight
-        self.cost=BicycleParts.BicycleCost
-        
-        
+
+#Generic Parent class containing common attributes
+class Parts(object):
+    def __init__(self,weight,cost):
+        self._weight=weight
+        self._cost=cost
+
+
+class Wheeltypes(Enum):
+    BMX=(2,20)
+    Road=(1,20)
+    Track=(1,25)
+
+class Frametypes(Enum):
+    Aluminium= (110,120)
+    Carbon = (115,200)
+    Steel= (112.5,250)
+    
+
+#First part- Wheel        
+class Wheel(Parts):
+    def __init__(self,wheeltype=Wheeltypes.BMX):
+        if isinstance(wheeltype,Wheeltypes):
+            super().__init__(wheeltype.value[0],wheeltype.value[1])    
+        else:
+            raise ValueError("Invalid Wheel type")
+            
     def __str__(self):
-        print("Name: {} Weight: {} Price: {}".format(self.name,self.weight,self.cost))
+        print("Wheel details {} {}".format(self._cost,self._weight))
         
+#Second Part- Frame
+class Frame(Parts):
+    def __init__(self,frametype=Frametypes.Aluminium):
+        if isinstance(frametype,Frametypes):
+            super().__init__(frametype.value[0],frametype.value[1])    
+        else:
+            raise ValueError("Invalid Frame type")
+            
+    def __str__(self):
+        print("Frame details {} {}".format(self._cost,self._weight))
+
+#Happy Customer
 class Customer(object):
     def __init__(self,name,fund):
         self.name=name
@@ -18,35 +51,77 @@ class Customer(object):
         
     def __str__(self):
         print("I am {} and I have {} funds".format(self.name,self.fund))
-
         
-class BikeShop(object):
-  
-    NetProfit=0;
-    
-    def __init__(self,name,Bikes):
+        
+#Combination of Wheels and Frames- Logic here to get wheels of the same type   
+#class BicycleParts(Wheel,Frame):
+   #def __init__(self,wheeltype,count,frametype):
+    #   BicycleCost=0
+     #   F1=Frame(frametype)
+     #  BicycleCost+=F1._cost
+     #  BicycleWeight+=F1._weight
+#    for i in range(0,count):
+ #        W1=Wheel(wheeltype)
+  #      BicycleCost+=W1._cost
+   #    BicycleWeight+=W1._weight
+    #    super().__init__(BicycleWeight,BicycleCost)
+        
+#Finished Product
+class Bicycle(Parts):
+    def __init__(self,name,Wheels,Frame):
+        TotalCost=0
+        TotalWeight=0
+        TotalCost+=Frame._cost
+        TotalWeight+=Frame._weight
+        if isinstance (Wheels,list):
+            for Wheel in Wheels:
+                TotalCost+=Wheel._cost
+                TotalWeight+=Wheel._weight
+        super().__init__(TotalWeight,TotalCost)
         self.name=name
+        
+        
+    def __str__(self):
+        print("Name: {} Weight: {}lbs Price: ${}".format(self.name,self._weight,self._cost))
+
+
+
+#Bikeshops selling Bikes---Add NetProfit as an Instance Variable
+class BikeShop(Bicycle):
+    self.NetProfit=0
+    def __init__(self,name,Bikes,margin=0.2):
+        self.name=name
+        self.margin=margin
         self.inventory={}
-       
         for Bicycle in Bikes:
-            self.inventory[Bicycle.name]=0.2*Bicycle.cost+Bicycle.cost
-        
-        
+            self.inventory[Bicycle.name]=self.margin*Bicycle._cost+Bicycle._cost
+            
     def __str__(self):
         print("Name of the BikeShop: {}".format(self.name))
         print("Inventory List")
         for cycle,sp in self.inventory.items():
             print(cycle,sp)
             
-  
+    #To filter out affordable bicycles
     def filterBicycles(self,Customers):
-        print("Affordable Bicycles")
+     
         for Customer in Customers:
+            print("Affordable Bicycles by {}".format(Customer.name))
             for key in self.inventory:
                     if Customer.fund >= self.inventory[key]:
-                        print("Bicycle {} affordable by {} for amount {}".format(key,Customer.name,self.inventory[key]))
+                        print(key)
     
-    
+    #Sell Bikes based on First come first served
+    def SellBicycles(self,Customers):
+       for Customer in Customers:
+            for key,value in self.inventory.items():
+                    if Customer.fund >= value:
+                        print("{} bought Bicycle {} for the amount {}. Remaining Funds {}".format(Customer.name,key,value,Customer.fund-value))
+                        BikeShop.NetProfit=BikeShop.NetProfit+value
+                        del self.inventory[key]
+                    break    
+                
+    #Sell Bikes based on the max amount affordable by the customer
     def SellBicyclesMaxProfit(self,Customers):
        for Customer in Customers:
             for key,value in sorted(self.inventory.items(),reverse=True):
@@ -56,86 +131,12 @@ class BikeShop(object):
                         del self.inventory[key]
                     break    
                     
-    def SellBicycles(self,Customers):
-       for Customer in Customers:
-            for key,value in self.inventory.items():
-                    if Customer.fund >= value:
-                        print("{} bought Bicycle {} for the amount {}. Remaining Funds {}".format(Customer.name,key,value,Customer.fund-value))
-                        BikeShop.NetProfit=BikeShop.NetProfit+value
-                        del self.inventory[key]
-                    break    
-    
-class Parts(object):
-    def __init__(self,weight,cost):
-        self.weight=weight
-        self.cost=cost
-        
-class Wheel(Parts):
-    def __init__(self,modelname,weight=0,cost=0):
-         self.__modelname=modelname
-         self.cost=cost
-         self.weight=cost
-         
-    @property
-    def modelname(self):
-        return self.__modelname
-        
-    @modelname.setter
-    def modelname(self,modelname):
-        wheeltype={'bmx':(2,20),'road':(1,20),'track':(2.5,20)}
-        if(self.__modelname in wheeltype):
-            super(Wheel,self).__init__(wheeltype[self.modelname][0],wheeltype[self.modelname][1])
-        
-            
-            
-    def __str__(self):
-        print("Wheel details {} {}".format(self.cost,self.weight))
-
-class Frame(Parts):
-    def __init__(self,weight,cost,type):
-        super(Frame,self).__init__(weight,cost)
-        self.type=type 
-        
-    @property   
-    def type(self):
-        return self.__type
-    @type.setter
-    def type(self,type):
-        if type.lower() in ["aluminium","carbon","steel"]:
-            self.__type=type
-        else:
-           raise ValueError("Invalid Frame type")
-            
-    def __str__(self):
-        print("Frame details {} {} {}".format(self.weight,self.cost,self.type))
    
-class BicycleParts(object):
-    BicycleCost=0
-    BicycleWeight=0
+class BikeManufacturer(object):
+    def __init__(self,name,profitpercent):
+        self.name=name
+        self.profitpercent=profitpercent
     
-    def __init__(self,wheels,frame):
-        BicycleParts.BicycleCost+=frame.cost
-        BicycleParts.BicycleWeight+=frame.weight
-        for Wheel in wheels:
-            BicycleParts.BicycleCost+=Wheel.cost
-            BicycleParts.BicycleWeight+=Wheel.weight
-       
-        
-        
-    def __str__(self):
-        print("Total Cost {} and Total Weight {}".format(BicycleParts.BicycleCost,BicycleParts.BicycleWeight))
-        
-F1 = Frame(10,30,"Aluminium")
-F1.type="CArbon"
-F1.__str__()
-#WL=[Wheel(10,10.2,"Aluminium"),Wheel(10,10.2,"Aluminium")]
-W1=Wheel("road")
-W1.modelname="road"
-W1.__str__()
-#BP1= BicycleParts(WL,F1)
-#BP1.__str__()
-
-
-#B1= Bicycle("Atlas",BP1)
-
-
+    def buildcycles(self):
+        BikeList=[Bicycle("Atlas","Road","Carbon"),Bicycle("Neptune","bmx","Aluminium"),Bicycle("Pluto","track","steel")]
+        return BikeList
